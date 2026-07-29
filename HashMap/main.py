@@ -1,6 +1,7 @@
 import copy
 from collections.abc import Callable
 import math
+import struct
 
 
 class Node:
@@ -12,7 +13,24 @@ class Node:
         self.value = value
 
 def _to_int(data):
-    return int.from_bytes(data.encode('utf-8'), byteorder='big')
+    if isinstance(data, float):
+        return int.from_bytes(struct.pack(">d", data), "big")
+
+
+    elif isinstance(data, int):
+        return data
+
+    elif isinstance(data, str):
+        return int.from_bytes(data.encode('utf-8'), byteorder='big')
+
+    elif isinstance(data, bytes):
+        return int.from_bytes(data, "big")
+
+    else:
+        raise Exception('Unknown data type provided')
+
+
+
 
 class HashMap:
     _initial_size = 13
