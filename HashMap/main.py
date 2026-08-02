@@ -2,6 +2,10 @@ import copy
 from collections.abc import Callable
 import math
 import struct
+import random
+import json
+from types import NoneType
+
 
 
 class Node:
@@ -13,23 +17,35 @@ class Node:
         self.value = value
 
 def _to_int(data):
-    if isinstance(data, float):
-        return int.from_bytes(struct.pack(">d", data), "big")
-
+    if isinstance(data, NoneType):
+        raise Exception('Object is NoneType')
 
     elif isinstance(data, int):
         return data
 
-    elif isinstance(data, str):
-        return int.from_bytes(data.encode('utf-8'), byteorder='big')
+    elif isinstance(data, bool):
+        return int(data)
 
     elif isinstance(data, bytes):
         return int.from_bytes(data, "big")
 
+    elif isinstance(data, float):
+        return int.from_bytes(struct.pack(">d", data), "big")
+
+    elif isinstance(data, complex):
+        return _to_int(data.imag) + _to_int(data.real)
+
+    elif isinstance(data, str):
+        return int.from_bytes(data.encode('utf-8'), byteorder='big')
+
+    elif isinstance(data, range):
+        return data.start + data.stop + data.step
+
+    elif isinstance(data, list) or isinstance(data, tuple):
+        return sum(map(_to_int, data))
+
     else:
-        raise Exception('Unknown data type provided')
-
-
+        return _to_int(json.dumps(data))
 
 
 class HashMap:
@@ -39,6 +55,8 @@ class HashMap:
     _crowding_coefficient = 0.75
     _count = 0
     _array = []
+    _tumb_key = 'tumb_name_' + str(random.Random().random())
+    _tumb_node = Node(_tumb_key, None)
 
 
     def __init__(self):
@@ -90,7 +108,7 @@ class HashMap:
         self._prime = self.__get_largest_prime(len(self._array))
         # print("PRIME: ", self._prime)
         for node in old_array:
-            if node != None:
+            if node != None and node != self._tumb_node:
                 self._add_node(node)
 
     def get(self, key):
@@ -122,7 +140,7 @@ class HashMap:
         if i == None:
             return None
         node = self._array[i]
-        self._array[i] = None
+        self._array[i] = self._tumb_node
         self._count -= 1
 
         new_size = len(self._array) // self._coefficient
@@ -140,7 +158,7 @@ class HashMap:
 
     def each(self, func: Callable[[any, any], None]):
         for node in self._array:
-            if node != None:
+            if node != None and node != self._tumb_node:
                 func(node.key, node.value)
 
     def count(self):

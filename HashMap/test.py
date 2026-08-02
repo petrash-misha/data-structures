@@ -4,7 +4,7 @@ import main
 hash_map = main.HashMap()
 
 
-letters = ['a', 4, 'c', 'd', 'e', 'fk', 'g', 7, 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x','y', 'z', 9.5]
+letters = ['a', 4.7, 'c', 'd','fk', 'g', 7, 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'h', 'r', 's', 't', 'u', 'v', 'w', 'x','hj', False, [1, 3.6, 4, "gh"], 8, 3 + 4j, ("apple", "banana", "cherry"), range(5), 9.7]
 
 print(hash_map._count)
 
@@ -28,6 +28,7 @@ for i in letters:
 print(hash_map._array)
 print(len(hash_map._array))
 print(hash_map._count)
+
 
 print("----------------------------------------------")
 num = -26
@@ -53,6 +54,7 @@ for i in letters:
 print(len(hash_map._array))
 print(hash_map._array)
 print(hash_map._count)
+
 
 print("----------------------------------------------")
 num = 0
